@@ -1,12 +1,11 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"strings"
 
-	artikel "github.com/amarmaulana95/backend-portal/artikel"
+	article "github.com/amarmaulana95/backend-portal/artikel"
 	"github.com/amarmaulana95/backend-portal/auth"
 	"github.com/amarmaulana95/backend-portal/handler"
 	"github.com/amarmaulana95/backend-portal/helper"
@@ -26,25 +25,23 @@ func main() {
 		log.Fatal(err.Error())
 	}
 	userRepository := user.NewRepository(db)
-	artikelRepository := artikel.NewRepository(db)
-
-	artikels, err := artikelRepository.FindAll()
-
-	fmt.Println("debug")
-	fmt.Println("debug")
-	fmt.Println("debug")
-	fmt.Println(len(artikels))
+	articleRepository := article.NewRepository(db)
 
 	userService := user.NewService(userRepository)
+	articleService := article.NewService(articleRepository)
+
 	authService := auth.NewService()
 
 	userHandler := handler.NewUserHandler(userService, authService)
+	articleHandler := handler.NewarticleHandler(articleService)
 
 	router := gin.Default()       //membuat routing
 	api := router.Group("api/v1") //api group versioning (untuk dkebutuhan aja)
 
 	api.POST("/users", userHandler.RegisterUser) //registers
 	api.POST("/sessions", userHandler.Login)     //login
+
+	api.GET("/article", articleHandler.GetArticles)
 
 	router.Run()
 }

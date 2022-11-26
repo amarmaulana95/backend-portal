@@ -1,7 +1,6 @@
 package article
 
 import (
-	"os/user"
 	"time"
 )
 
@@ -15,7 +14,6 @@ type Article struct {
 	CreatedAt        time.Time
 	UpdatedAt        time.Time
 	ArticleImages    []ArticleImages
-	User             user.User
 }
 
 type ArticleImages struct {
