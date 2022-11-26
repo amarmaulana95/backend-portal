@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 
+	"github.com/amarmaulana95/backend-portal/auth"
 	"github.com/amarmaulana95/backend-portal/handler"
 	user "github.com/amarmaulana95/backend-portal/users"
 	"github.com/gin-gonic/gin"
@@ -20,7 +21,9 @@ func main() {
 	}
 	userRepository := user.NewRepository(db)
 	userService := user.NewService(userRepository)
-	userHandler := handler.NewUserHandler(userService)
+	authService := auth.NewService()
+
+	userHandler := handler.NewUserHandler(userService, authService)
 
 	router := gin.Default()       //membuat routing
 	api := router.Group("api/v1") //api group versioning (untuk dkebutuhan aja)
