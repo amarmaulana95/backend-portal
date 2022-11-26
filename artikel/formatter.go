@@ -1,1 +1,1 @@
-package artikel
+package article
