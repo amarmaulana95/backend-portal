@@ -1,0 +1,4 @@
+input -> input data
+handler -> maping inputan ke struc
+service -> maping ke struc User
+repository -> save struc User ke db
