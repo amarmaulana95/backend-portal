@@ -3,8 +3,9 @@ package user
 import "gorm.io/gorm"
 
 type Repository interface { //membuat sebuah interface yg bernama repository,
-
-	Save(user User) (User, error) //membuat sebuah fungsi save yang parameternya struc User, dan mengembalikan user/err
+	//construct
+	Save(user User) (User, error)           //membuat sebuah fungsi save yang parameternya struc User, dan mengembalikan user/err
+	FindByEmail(email string) (User, error) //membuat sebuah fungsi FindByEmail yang parameternya string, dan mengembalikan user/err
 }
 
 type repository struct { // sebuah struct bernama repository (r nya kecil) yang artinya tidak bersifat public/tidak bisa di panggil di package yg lain.
@@ -23,4 +24,14 @@ func (r *repository) Save(user User) (User, error) { //membuat sebuah fungsi yan
 
 	return user, nil //return jika berhasil
 
+}
+
+func (r *repository) FindByEmail(email string) (User, error) { // fungsi find by email dengan parameter email, mengembalikan user dan err
+	var user User
+	err := r.db.Where("email = ?", email).Find(&user).Error //cek ke db ada user dengan email ...?
+
+	if err != nil { //cek validasi
+		return user, nil //return
+	}
+	return user, nil //jika ada balikan user dan nil
 }

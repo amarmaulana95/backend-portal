@@ -26,6 +26,7 @@ func main() {
 	api := router.Group("api/v1") //api group versioning (untuk dkebutuhan aja)
 
 	api.POST("/users", userHandler.RegisterUser) //endpoint
+	api.POST("/sessions", userHandler.Login)     //login
 
 	router.Run()
 }
