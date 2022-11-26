@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"fmt"
 	"time"
 
@@ -8,7 +9,8 @@ import (
 )
 
 type Service interface { //membuat interfaces service
-	GenerateToken(userID int) (string, error) //generate token paramnya userID
+	GenerateToken(userID int) (string, error)       //generate token paramnya userID
+	ValidateToken(token string) (*jwt.Token, error) //untuk validasi token
 }
 
 type jwtService struct {
@@ -39,5 +41,24 @@ func (s *jwtService) GenerateToken(userID int) (string, error) { //membuat fungs
 	}
 
 	return signedToken, nil
+
+}
+
+func (s *jwtService) ValidateToken(encodeToken string) (*jwt.Token, error) { // validasi token
+	// masukan token , parameternya adalah func lalu mengembalikan interface dan err
+	token, err := jwt.Parse(encodeToken, func(token *jwt.Token) (interface{}, error) {
+		_, ok := token.Method.(*jwt.SigningMethodHMAC)
+		//cek tokennya
+		if !ok {
+			return nil, errors.New("invalid token")
+		}
+
+		return []byte(SCREET_KEY), nil
+	})
+
+	if err != nil {
+		return token, err
+	}
+	return token, nil
 
 }

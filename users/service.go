@@ -9,6 +9,7 @@ import (
 type Service interface { //membuat interface service
 	RegisterUser(input RegisterUserInput) (User, error) // methodnya RegisterUser, parameternya inputan user, balikannya user dan err
 	Login(input LoginInput) (User, error)               //untuk login
+	GetUserByID(ID int) (User, error)                   //untuk get by id user
 }
 
 type service struct {
@@ -61,6 +62,19 @@ func (s *service) Login(input LoginInput) (User, error) { //fungsi login dengan 
 
 	return user, nil //jika ok
 
+}
+
+func (s *service) GetUserByID(ID int) (User, error) { // cek midellware token
+	user, err := s.repository.FindByID(ID)
+	if err != nil {
+		return user, err
+	}
+
+	if user.ID == 0 {
+		return user, errors.New("No user found on that ID")
+	}
+
+	return user, nil
 }
 
 // maping struct inputan -> struct User
