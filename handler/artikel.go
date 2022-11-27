@@ -34,7 +34,7 @@ func (h *articleHandler) GetArticles(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	response := helper.APIResponse("List data posted all", http.StatusOK, "success", articles)
+	// response := helper.APIResponse("List data posted all", http.StatusOK, "success", articles)
+	response := helper.APIResponse("List data posted all", http.StatusOK, "success", article.FormatArticles(articles))
 	c.JSON(http.StatusOK, response)
-	return
 }

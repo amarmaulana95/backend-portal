@@ -42,6 +42,7 @@ func main() {
 	api.POST("/sessions", userHandler.Login)     //login
 
 	api.GET("/article", articleHandler.GetArticles)
+	router.Static("/images", "./images")
 
 	router.Run()
 }

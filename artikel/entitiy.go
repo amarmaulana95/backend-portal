@@ -5,15 +5,15 @@ import (
 )
 
 type Article struct {
-	ID               int
-	UserID           int
-	Judul            string
-	ShortDescription string
-	Description      string
-	Slug             string
-	CreatedAt        time.Time
-	UpdatedAt        time.Time
-	ArticleImages    []ArticleImages
+	ID                int
+	UserID            int
+	Judul             string
+	ShortDescriptions string
+	Description       string
+	Slug              string
+	CreatedAt         time.Time
+	UpdatedAt         time.Time
+	ArticleImages     []ArticleImages
 }
 
 type ArticleImages struct {
