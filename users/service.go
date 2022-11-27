@@ -7,6 +7,7 @@ import (
 )
 
 type Service interface { //membuat interface service
+	GetAllUsers() ([]User, error)
 	RegisterUser(input RegisterUserInput) (User, error) // methodnya RegisterUser, parameternya inputan user, balikannya user dan err
 	Login(input LoginInput) (User, error)               //untuk login
 	GetUserByID(ID int) (User, error)                   //untuk get by id user
@@ -75,6 +76,15 @@ func (s *service) GetUserByID(ID int) (User, error) { // cek midellware token
 	}
 
 	return user, nil
+}
+
+func (s *service) GetAllUsers() ([]User, error) {
+	users, err := s.repository.FindAll()
+	if err != nil {
+		return users, err
+	}
+
+	return users, nil
 }
 
 // maping struct inputan -> struct User

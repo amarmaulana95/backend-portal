@@ -7,6 +7,8 @@ type ArticleFormatter struct {
 	ShortDescriptions string `json:"short_descriptions"`
 	ImageUrl          string `json:"image_url"`
 	Slug              string `json:"slug"`
+	Point             int    `json:"point"`
+	Approve           int    `json:"approve"`
 }
 
 func FormatArticle(article Article) ArticleFormatter {
@@ -17,6 +19,8 @@ func FormatArticle(article Article) ArticleFormatter {
 	ArticleFormatter.Judul = article.Judul
 	ArticleFormatter.ShortDescriptions = article.ShortDescriptions
 	ArticleFormatter.Slug = article.Slug
+	ArticleFormatter.Point = article.Point
+	ArticleFormatter.Approve = article.Approve
 	ArticleFormatter.ImageUrl = ""
 
 	if len(article.ArticleImages) > 0 {

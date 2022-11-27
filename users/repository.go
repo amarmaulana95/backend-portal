@@ -4,6 +4,8 @@ import "gorm.io/gorm"
 
 type Repository interface { // interface repository,
 	//construct
+
+	FindAll() ([]User, error)
 	Save(user User) (User, error)           //membuat sebuah fungsi save yang parameternya struc User, dan mengembalikan user/err
 	FindByEmail(email string) (User, error) //membuat sebuah fungsi FindByEmail yang parameternya string, dan mengembalikan user/err
 	FindByID(ID int) (User, error)          //membuat sebuah fungsi FindByID yang parameternya ID, retunr User dan err
@@ -48,4 +50,15 @@ func (r *repository) FindByID(ID int) (User, error) { // fungsi find by ID denga
 	}
 	//lanjut return ok
 	return user, nil
+}
+
+func (r *repository) FindAll() ([]User, error) { // fungsi get all user
+	var users []User
+
+	err := r.db.Find(&users).Error
+	if err != nil {
+		return users, err
+	}
+
+	return users, nil
 }

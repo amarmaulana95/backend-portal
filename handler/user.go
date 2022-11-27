@@ -41,7 +41,7 @@ func (h *userHandler) RegisterUser(c *gin.Context) {
 		return
 	}
 	//jika ok
-	token, err := h.authService.GenerateToken(NewUser.ID)
+	token, err := h.authService.GenerateToken(NewUser.ID, NewUser.Role)
 	if err != nil {
 		response := helper.APIResponse("failed register", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
@@ -80,7 +80,7 @@ func (h *userHandler) Login(c *gin.Context) {
 		return
 	}
 
-	token, err := h.authService.GenerateToken(loggedinUser.ID) //generate token
+	token, err := h.authService.GenerateToken(loggedinUser.ID, loggedinUser.Role) //generate token
 	if err != nil {
 		response := helper.APIResponse("Loggin failed", http.StatusBadRequest, "error", nil)
 		c.JSON(http.StatusBadRequest, response)
@@ -90,4 +90,25 @@ func (h *userHandler) Login(c *gin.Context) {
 	formatter := user.FormatUser(loggedinUser, token)
 	response := helper.APIResponse("Login success", http.StatusOK, "success", formatter)
 	c.JSON(http.StatusOK, response)
+}
+
+func (h *userHandler) FetchUser(c *gin.Context) {
+	currentUser := c.MustGet("currentUser").(user.User)
+	UserRole := currentUser.Role
+	if UserRole != "admin" { //cek yg update admin bukan ? validasi tolak jika bukan admin
+		response := helper.APIResponse("error", http.StatusUnprocessableEntity, "error", "you not admin")
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	users, err := h.userService.GetAllUsers()
+	if err != nil {
+		response := helper.APIResponse("Error get data user ", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	// response := helper.APIResponse("List data posted all", http.StatusOK, "success", articles)
+	response := helper.APIResponse("List data user all", http.StatusOK, "success", users)
+	c.JSON(http.StatusOK, response)
+
 }

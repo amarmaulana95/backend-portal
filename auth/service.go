@@ -9,8 +9,8 @@ import (
 )
 
 type Service interface { //membuat interfaces service
-	GenerateToken(userID int) (string, error)       //generate token paramnya userID
-	ValidateToken(token string) (*jwt.Token, error) //untuk validasi token
+	GenerateToken(userID int, UserRole string) (string, error) //generate token paramnya userID
+	ValidateToken(token string) (*jwt.Token, error)            //untuk validasi token
 }
 
 type jwtService struct {
@@ -22,13 +22,13 @@ func NewService() *jwtService {
 	return &jwtService{}
 }
 
-func (s *jwtService) GenerateToken(userID int) (string, error) { //membuat fungsi Generate token, balikannya string dan error
+func (s *jwtService) GenerateToken(userID int, UserRole string) (string, error) { //membuat fungsi Generate token, balikannya string dan error
 
 	Expired := time.Now().Add(time.Hour * 24 * 7).Unix()
 	fmt.Println(Expired)
-
 	claim := jwt.MapClaims{}
 	claim["user_id"] = userID
+	claim["role"] = UserRole
 	claim["exp"] = Expired
 
 	//claim  jwt

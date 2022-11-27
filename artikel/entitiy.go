@@ -13,6 +13,8 @@ type Article struct {
 	ShortDescriptions string
 	Descriptions      string
 	Slug              string
+	Point             int
+	Approve           int
 	CreatedAt         time.Time
 	UpdatedAt         time.Time
 	ArticleImages     []ArticleImages

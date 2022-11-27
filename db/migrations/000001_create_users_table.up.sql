@@ -8,3 +8,5 @@ create table users(
     created_at timestamp NULL,
     updated_at timestamp NULL
 );
+
+ALTER TABLE `users` CHANGE `id` `id` INT(11) NOT NULL AUTO_INCREMENT;
