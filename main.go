@@ -38,16 +38,22 @@ func main() {
 	router := gin.Default()       //membuat routing
 	api := router.Group("api/v1") //api group versioning (untuk dkebutuhan aja)
 
-	api.POST("/users", userHandler.RegisterUser) //registers
-	api.POST("/sessions", userHandler.Login)     //login
+	//--------------------------------USER AREA ENDPOINT------------------------------------//
 
-	api.GET("/article", articleHandler.GetArticles)
+	api.POST("/users", userHandler.RegisterUser) //	=>	registers
+	api.POST("/sessions", userHandler.Login)     //	=>	login
+
+	//--------------------------------ARTIKEL AREA ENDPOINT------------------------------------//
+
+	api.GET("/article", articleHandler.GetArticles)    //	=>	artikel and by/or by user_id?=1
+	api.GET("/article/:id", articleHandler.GetArticle) //	=>	artikel:id
+
 	router.Static("/images", "./images")
 
 	router.Run()
 }
 
-func authMiddleware(authService auth.Service, userService user.Service) gin.HandlerFunc {
+func authMiddleware(authService auth.Service, userService user.Service) gin.HandlerFunc { //Membuat midlleware
 
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")

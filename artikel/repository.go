@@ -6,6 +6,7 @@ type Repository interface { // seperti biasa membuat interface repository
 	//di definisikan dengan nama ...
 	FindAll() ([]Article, error)
 	FindByUserID(userID int) ([]Article, error)
+	FindByID(ID int) (Article, error)
 }
 
 type repository struct { // sebuah struct bernama repository (r nya kecil) yang artinya tidak bersifat public/tidak bisa di panggil di package yg lain.
@@ -38,4 +39,16 @@ func (r *repository) FindByUserID(userID int) ([]Article, error) { //membuat fun
 		return articles, err
 	}
 	return articles, nil
+}
+
+func (r *repository) FindByID(ID int) (Article, error) { //membuat fungsi untuk mencari artikel berdasarkan artikel ID
+	var article Article
+
+	err := r.db.Preload("User").Preload("ArticleImages").Where("id = ?", ID).Find(&article).Error
+
+	if err != nil {
+		return article, err
+	}
+
+	return article, nil
 }

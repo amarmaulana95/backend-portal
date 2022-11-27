@@ -12,7 +12,7 @@ import (
 // tangkap param di handler
 // handler ke service
 // service menentukan repository mana yg akan di call
-// repo : GetAll GetUserbyID
+// repo :  panggil fungsi ...
 // to db
 
 type articleHandler struct {
@@ -24,7 +24,7 @@ func NewarticleHandler(service article.Service) *articleHandler {
 	return &articleHandler{service} // karna disini akan terkoneksi dengan service
 }
 
-//api/v1/campaigns
+//api/v1/article
 func (h *articleHandler) GetArticles(c *gin.Context) {
 	userID, _ := strconv.Atoi(c.Query("user_id")) //ubah ke int dngn strconv.atoi
 
@@ -36,5 +36,28 @@ func (h *articleHandler) GetArticles(c *gin.Context) {
 	}
 	// response := helper.APIResponse("List data posted all", http.StatusOK, "success", articles)
 	response := helper.APIResponse("List data posted all", http.StatusOK, "success", article.FormatArticles(articles))
+	c.JSON(http.StatusOK, response)
+}
+
+func (h *articleHandler) GetArticle(c *gin.Context) {
+	// url => api/v1/article/1
+	// => handler : maping inputan id di url ke struct input => service, call formatter
+	var input article.GetArticleDetailInput
+
+	err := c.ShouldBindUri(&input) //maping inputan
+	if err != nil {                //cek ada eror ?
+		response := helper.APIResponse("Failed to get detail of article", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	articleDetail, err := h.service.GetArticleByID(input)
+	if err != nil {
+		response := helper.APIResponse("Failed to get detail of article", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+	// jika ok masukan balikan respon ke formater lalu show
+	response := helper.APIResponse("Article detail", http.StatusOK, "success", article.FormatArticleDetail(articleDetail))
 	c.JSON(http.StatusOK, response)
 }
