@@ -11,7 +11,7 @@ type Article struct {
 	UserID            int
 	Judul             string
 	ShortDescriptions string
-	Description       string
+	Descriptions      string
 	Slug              string
 	CreatedAt         time.Time
 	UpdatedAt         time.Time

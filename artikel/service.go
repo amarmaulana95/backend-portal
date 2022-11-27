@@ -1,9 +1,16 @@
 package article
 
+import (
+	"fmt"
+
+	"github.com/gosimple/slug"
+)
+
 type Service interface { //membuat interface service
 	//kontrak service article
 	GetArticles(userID int) ([]Article, error)                   // methodnya GetArticles, parameternya inputan user, balikannya user dan err
 	GetArticleByID(input GetArticleDetailInput) (Article, error) // methodnya GetArticleDetailInput, parameternya inputan ID, balikannya artikel dan err
+	CreateArticle(input CreateArticleInput) (Article, error)
 }
 
 type service struct { //panggil repository (defidency)
@@ -39,4 +46,23 @@ func (s *service) GetArticleByID(input GetArticleDetailInput) (Article, error) {
 		return article, err
 	}
 	return article, nil
+}
+
+func (s *service) CreateArticle(input CreateArticleInput) (Article, error) { //fungsi create artikel
+	//maping inputan ke object article
+	article := Article{} // => object
+	article.Judul = input.Judul
+	article.ShortDescriptions = input.ShortDescriptions
+	article.Descriptions = input.Descriptions
+	article.UserID = input.User.ID
+
+	slugCandidate := fmt.Sprintf("%s %d", input.Judul, input.User.ID) //membuat slug dengan library slug
+	article.Slug = slug.Make(slugCandidate)
+
+	newCampaign, err := s.repository.Save(article) //lempar inputan ke repository
+	if err != nil {
+		return newCampaign, err
+	}
+
+	return newCampaign, nil
 }

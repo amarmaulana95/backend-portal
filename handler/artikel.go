@@ -6,6 +6,7 @@ import (
 
 	article "github.com/amarmaulana95/backend-portal/artikel"
 	"github.com/amarmaulana95/backend-portal/helper"
+	user "github.com/amarmaulana95/backend-portal/users"
 	"github.com/gin-gonic/gin"
 )
 
@@ -59,5 +60,33 @@ func (h *articleHandler) GetArticle(c *gin.Context) {
 	}
 	// jika ok masukan balikan respon ke formater lalu show
 	response := helper.APIResponse("Article detail", http.StatusOK, "success", article.FormatArticleDetail(articleDetail))
+	c.JSON(http.StatusOK, response)
+}
+
+func (h *articleHandler) CreateArticle(c *gin.Context) {
+	var input article.CreateArticleInput
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("Failed to create article", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	currentUser := c.MustGet("currentUser").(user.User) //untuk mendaptkan data curent user
+
+	input.User = currentUser
+
+	newArticle, err := h.service.CreateArticle(input)
+	if err != nil {
+		response := helper.APIResponse("Failed to create campaign", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("Success to create campaign", http.StatusOK, "success", article.FormatArticle(newArticle))
 	c.JSON(http.StatusOK, response)
 }

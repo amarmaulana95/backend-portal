@@ -40,7 +40,7 @@ type ArticleDetailFormatter struct { // membuat formater untuk kebutuhan reponse
 	ID                int                     `json:"id"`
 	Name              string                  `json:"name"`
 	ShortDescriptions string                  `json:"short_descriptions"`
-	Description       string                  `json:"description"`
+	Descriptions      string                  `json:"descriptions"`
 	ImageURL          string                  `json:"image_url"`
 	UserID            int                     `json:"user_id"`
 	Slug              string                  `json:"slug"`
@@ -63,7 +63,7 @@ func FormatArticleDetail(article Article) ArticleDetailFormatter { //=> membuat 
 	articleDetailFormatter.ID = article.ID
 	articleDetailFormatter.Name = article.Judul
 	articleDetailFormatter.ShortDescriptions = article.ShortDescriptions
-	articleDetailFormatter.Description = article.Description
+	articleDetailFormatter.Descriptions = article.Descriptions
 	articleDetailFormatter.UserID = article.UserID
 	articleDetailFormatter.Slug = article.Slug
 	articleDetailFormatter.ImageURL = ""

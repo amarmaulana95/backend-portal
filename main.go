@@ -47,6 +47,7 @@ func main() {
 
 	api.GET("/article", articleHandler.GetArticles)    //	=>	artikel and by/or by user_id?=1
 	api.GET("/article/:id", articleHandler.GetArticle) //	=>	artikel:id
+	api.POST("/article", authMiddleware(authService, userService), articleHandler.CreateArticle)
 
 	router.Static("/images", "./images")
 

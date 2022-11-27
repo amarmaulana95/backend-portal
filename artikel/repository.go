@@ -7,6 +7,7 @@ type Repository interface { // seperti biasa membuat interface repository
 	FindAll() ([]Article, error)
 	FindByUserID(userID int) ([]Article, error)
 	FindByID(ID int) (Article, error)
+	Save(article Article) (Article, error)
 }
 
 type repository struct { // sebuah struct bernama repository (r nya kecil) yang artinya tidak bersifat public/tidak bisa di panggil di package yg lain.
@@ -46,6 +47,15 @@ func (r *repository) FindByID(ID int) (Article, error) { //membuat fungsi untuk 
 
 	err := r.db.Preload("User").Preload("ArticleImages").Where("id = ?", ID).Find(&article).Error
 
+	if err != nil {
+		return article, err
+	}
+
+	return article, nil
+}
+
+func (r *repository) Save(article Article) (Article, error) { //membuatfungsi untuk save dengan parameter inputan postman yg sudah di maping berdasarkan struct
+	err := r.db.Create(&article).Error
 	if err != nil {
 		return article, err
 	}
