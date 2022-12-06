@@ -1,4 +1,2 @@
-# Bakcend-portal
-
-Use GO-GIN Framework
+# Bakcend-portal Go-Gin 
  
